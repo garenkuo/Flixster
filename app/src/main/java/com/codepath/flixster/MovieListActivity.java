@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.codepath.flixster.models.Config;
 import com.codepath.flixster.models.Movie;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -35,16 +36,14 @@ public class MovieListActivity extends AppCompatActivity {
 
     // instance fields
     AsyncHttpClient client;
-    // base url for loading images
-    String imageBaseUrl;
-    // poster size
-    String posterSize;
     // list of currently playing movies
     ArrayList<Movie> movies;
     // recycler view
     RecyclerView rvMovies;
     // adapter wired to recycler view
     MovieAdapter adapter;
+    // image config
+    Config config;
 
 
     @Override
@@ -114,15 +113,11 @@ public class MovieListActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    // parse image
-                    JSONObject images = response.getJSONObject("images");
-                    // get image base url
-                    imageBaseUrl = images.getString("secure_base_url");
-                    // get poster size
-                    JSONArray posterSizeOptions = images.getJSONArray("poster_sizes");
-                    // use option at index 3 or w342 as fallback
-                    posterSize = posterSizeOptions.optString(3, "w342");
-                    Log.i(TAG, String.format("Loaded configuration with imageBaseURL %s and posterSize %s", imageBaseUrl, posterSize));
+                    config = new Config(response);
+                    Log.i(TAG, String.format("Loaded configuration with imageBaseURL %s and posterSize %s",
+                            config.getImageBaseUrl(),
+                            config.getPosterSize()));
+                    adapter.setConfig(config);
                     getNowPlaying();
                 } catch (JSONException e) {
                     logError("Failed parsing configuration", e, true);
