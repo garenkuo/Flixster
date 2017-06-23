@@ -74,7 +74,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         boolean isPortrait = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
         // build url for poster image
-        String imageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
+        String imageUrl;
 
         if (isPortrait) {
             imageUrl = config.getImageUrl(config.getPosterSize(), movie.getPosterPath());
