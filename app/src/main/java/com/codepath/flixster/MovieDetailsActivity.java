@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import butterknife.OnClick;
 import cz.msebera.android.httpclient.Header;
 
 public class MovieDetailsActivity extends AppCompatActivity {
@@ -28,6 +30,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     TextView tvTitle;
     TextView tvOverview;
     RatingBar rbVoteAverage;
+    ImageView ivBackDrop;
 
     // constants
     // base URL for API
@@ -48,6 +51,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvOverview = (TextView) findViewById(R.id.tvOverview);
         rbVoteAverage = (RatingBar) findViewById(R.id.rbVoteAverage);
+        ivBackDrop = (ImageView) findViewById(R.id.ivBackdropImage);
 
         // unwrap the movie passed in via intent, using its simple name as a key
         movie = (Movie) Parcels.unwrap(getIntent().getParcelableExtra(Movie.class.getSimpleName()));
@@ -60,6 +64,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         // vote average is 0..10, convert to 0..5 by dividing by 2
         float voteAverage = movie.getVoteAverage().floatValue();
         rbVoteAverage.setRating(voteAverage = voteAverage > 0 ? voteAverage / 2.0f : voteAverage);
+    }
+
+    @OnClick(R.id.ivBackdropImage)
+    public void displayToast(ImageView ivBackdropImage) {
+        getVideoUrl();
     }
 
     // get list of currently playing movies
